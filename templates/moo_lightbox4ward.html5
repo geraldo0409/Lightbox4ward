@@ -33,7 +33,7 @@ $GLOBALS['Lightbox4ward']['options']['prevLbl'] 		= "'".$GLOBALS['TL_LANG']['lig
 /****************/
 
 // Add mediabox default style sheet 
-if(!isset($GLOBALS['TL_CSS']['lightbox4ward_css'])) $GLOBALS['TL_CSS']['lightbox4ward_css'] = TL_SCRIPT_URL.'system/modules/lightbox4ward/html/css/4wardmedia.css|screen';
+if(!isset($GLOBALS['TL_CSS']['lightbox4ward_css'])) $GLOBALS['TL_CSS']['lightbox4ward_css'] = TL_SCRIPT_URL.'system/modules/lightbox4ward/html/css/cerabox.css|screen';
 
 // Compile Options
 (preg_match('~(http[s]?://[^/]+).*~',$this->Environment->base,$erg)) ? $host = $erg[1] : $host=''; 
@@ -46,26 +46,37 @@ if(isset($GLOBALS['Lightbox4ward']['options']) && is_array($GLOBALS['Lightbox4wa
 $lightbox4wardOptions = substr($lightbox4wardOptions,0,-1); 
 ?>
 
-<script src="<?php echo TL_SCRIPT_URL; ?>system/modules/lightbox4ward/html/mediaboxAdv_lightbox4ward.js"></script>
+<script src="<?php echo TL_SCRIPT_URL; ?>system/modules/lightbox4ward/html/cerabox.js"></script>
 
 <script>
-Mediabox.customOptions = {<?php echo $lightbox4wardOptions; ?>};
-Mediabox.scanPage = function() {
-	var links = $$("a").filter(function(el)
-	{
-		return el.getAttribute('data-lightbox') != null;
-	});
-	$$(links).mediabox(Mediabox.customOptions,
-		function(el)
-		{
-			return [el.href, el.title, el.getAttribute('data-lightbox')];
-		},
-		function(el)
-		{
-			var data = this.getAttribute('data-lightbox').split(' ');
-			return (this == el) || el.getAttribute('data-lightbox').match(data[0]);
+// Mediabox.customOptions = {<?php echo $lightbox4wardOptions; ?>};
+window.addEvent("domready", function()
+{
+	var opts = {
+		displayOverlay: true,
+		loaderAtItem: true,
+		animation: 'ease',
+		fixedPosition: true,
+		clickToCloseOverlay: true,
+		preventScrolling: true
+	};
+
+	var g = {}; var e = [];
+	document.getElements('a[data-lightbox]').each(function(el){
+		var gal;
+		if(gal = el.get('data-lightbox').match(/^([^\d][^ ]+)/)) {
+			gal=gal[0];
+			(typeOf(g[gal]) != 'array') ? g[gal] = new Array(el) : g[gal].push(el);
 		}
-	);
-};
-window.addEvent("domready", Mediabox.scanPage);
+		else e.push(el);
+	});
+
+	Object.each(g,function(el){
+		new Elements(el).cerabox(opts);
+	});
+	Array.each(e,function(el){
+		el.cerabox(opts);
+	});
+});
+
 </script>
