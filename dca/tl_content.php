@@ -53,6 +53,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_type'] = array
 										'Article'	=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['article'] ,
 										'Extern'	=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['extern'] 
 									),
+		'save_callback'			  => array(array('ce_lightbox4ward','checkForDependencies')),
 		'eval'                    => array('mandatory'=>true,'submitOnChange'=>true)
 	);
 
@@ -124,10 +125,22 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_closeOnEnd'] = array
 
 class ce_lightbox4ward extends System
 {
-	
+
+	public function checkForDependencies($varValue)
+	{
+		if($varValue == 'FLV' && !in_array('flowplayer',$this->Config->getActiveModules()))
+		{
+			throw new Exception('Error: <a href="http://contao.org/de/extension-list/view/flowplayer.de.html" style="text-decoration: underline;">Flowplayer Extension</a> not installed! Please install it to use Video playback!');
+		}
+
+		return $varValue;
+	}
+
+
 	/**
 	 * Size callback
 	 * strips any non-numeric character expect of trailing %
+	 *
 	 * @param string $val serialized value
 	 * @return string
 	 */
