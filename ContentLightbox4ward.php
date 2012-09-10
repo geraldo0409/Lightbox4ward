@@ -65,11 +65,14 @@ class ContentLightbox4ward extends ContentElement
 		$this->Template->target = (TL_MODE == 'BE') ? '' : ' onclick="lightbox4ward'.$this->id.'();return false;"';
 		$this->Template->lbType = $this->lightbox4ward_type;
 		$this->Template->lbSize = unserialize($this->lightbox4ward_size);
-		
+
+		// todo make this better
+		$title = $this->lightbox4ward_caption.' '.$this->lightbox4ward_description;
+
 		switch($this->lightbox4ward_type)
 		{
 			case 'Image':
-				$this->Template->js = $this->generateSingeSrcJS($this->lightbox4ward_imageSRC,'',$this->lightbox4ward_caption,$this->lightbox4ward_description);
+				$this->Template->js = $this->generateSingeSrcJS($this->lightbox4ward_imageSRC,'', $title);
 				$this->Template->href = $this->lightbox4ward_imageSRC;
 			break;
 			
@@ -80,12 +83,12 @@ class ContentLightbox4ward extends ContentElement
 			break;
 			
 			case 'Extern':
-				$this->Template->js = $this->generateSingeSrcJS($this->lightbox4ward_externURL,$this->lightbox4ward_size,$this->lightbox4ward_caption,$this->lightbox4ward_description);
+				$this->Template->js = $this->generateSingeSrcJS($this->lightbox4ward_externURL, $this->lightbox4ward_size, $title);
 				$this->Template->href = $this->lightbox4ward_externURL;
 			break;
 			
 			case 'Article':
-				$this->Template->js = $this->generateSingeSrcJS('#mb_lightbox4wardContent'.$this->id,$this->lightbox4ward_size,$this->lightbox4ward_caption,$this->lightbox4ward_description);
+				$this->Template->js = $this->generateSingeSrcJS('#mb_lightbox4wardContent'.$this->id,$this->lightbox4ward_size, $title);
 				$this->Template->href = $this->Environment->request.'#mb_lightbox4wardContent'.$this->id;
 				
 				$this->Template->embed_post .= '<div style="display:none;"><div id="mb_lightbox4wardContent'.$this->id.'" class="lightbox4wardContent"><div class="lightbox4wardContentInside">';
@@ -94,60 +97,68 @@ class ContentLightbox4ward extends ContentElement
 			break;
 			
 			case 'FLV':
-				$this->Template->js = $this->generateFlowplayerJS($this->lightbox4ward_flvSRC, $this->lightbox4ward_size, $this->lightbox4ward_caption, $this->lightbox4ward_description);
-				$this->Template->href = $this->lightbox4ward_flvSRC;
+				$this->lightbox4ward_flvSRC = deserialize($this->lightbox4ward_flvSRC,true);
+				$this->Template->js = $this->generateMediaJS($this->lightbox4ward_flvSRC, $this->lightbox4ward_size, $title);
+				$this->Template->href = $this->lightbox4ward_flvSRC[0];
 			break;
 			
 			case 'Audio':
-				$this->Template->js = $this->generateFlowplayerJS(TL_PATH.'/'.$this->lightbox4ward_mp3SRC,$this->lightbox4ward_size,$this->lightbox4ward_caption,$this->lightbox4ward_description);
+				$this->Template->js = $this->generateMediaJS($this->lightbox4ward_mp3SRC,$this->lightbox4ward_size, $title, 'audio');
 				$this->Template->href = $this->lightbox4ward_mp3SRC;
-			break;			
+			break;
 		}
 		
-	}	
+	}
 
 
-	protected function generateFlowplayerJS($src,$size='',$caption='',$description='')
+	/**
+	 * Generate the javascripts for a HTML5 Video with usage of mediaelementjs
+	 *
+	 * @param $src
+	 * @param string $size
+	 * @param string $title
+	 * @param string $media video or audio
+	 * @return string
+	 */
+	protected function generateMediaJS($src, $size='', $title='', $media = 'video')
 	{
-		$src = str_replace('&#61;','=',$src); // Mediabox needs "=" instead of &#61; to explode the urls
-		$caption = str_replace("'","\\'",$caption); // ' have to be escaped
-		$description = str_replace("'","\\'",$description);
+		// load Mediaelement
+		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/lightbox4ward/html/mediaelement/mediaelement-and-player.js';
+		$GLOBALS['TL_CSS'][] = 'system/modules/lightbox4ward/html/mediaelement/mediaelementplayer.css';
+
+		$title = str_replace("'","\\'",$title); // ' have to be escaped
+
 		if(strlen($size)>1){
 			$size = unserialize($size);
 		}
 
-		$title = $caption;
-		if(strlen($description)) $title .= ' - '.$caption;
-
-
-		$objFlowplayer = new Flowplayer();
-		$objFlowplayer->injectJavascript();
-		$arrCfg = array('clip' => array('url' => $src));
-		// add closeOnEnd option
-		if($this->lightbox4ward_closeOnEnd)
+		// support multiple formats
+		if(!is_array($src)) $src = array($src);
+		$strSources = '';
+		foreach($src as $file)
 		{
-			$arrCfg['clip']['onBeforeFinish'] = 'function(){CeraBoxWindow.close();}';
+			$strSources .= '<source type="'.$media.'/'.substr($file,strrpos($file,'.')+1).'" src="'.$file.'">';
 		}
-		$strFlowplayerJS = $objFlowplayer->generate($arrCfg);
+
+		$strInlineVar = 'var lb4wdHtml5Var'.$this->id.' = \'<'.$media.' id="lb4wdHtml5'.$this->id.'" width="'.$size[0].'" height="'.$size[1].'" controls="controls" preload="none">'.$strSources.'</'.$media.'>\';';
 
 return <<<JSSTR
 <script type="text/javascript">
-var flowplayerID{$this->id} = '<div id="{$objFlowplayer->id}" style="width:{$size[0]}px;height:$size[1]px;"></div>';
+$strInlineVar
 function lightbox4ward{$this->id}()
 {
 	var elems = [
 		new Element('a',
 		{
-			href: '#\$flowplayerID{$this->id}',
+			href: '#\$lb4wdHtml5Var{$this->id}',
 			title: '{$title}'
 		})
 	];
 	var cb = new CeraBox(elems,
 	{
-
 		events: {
 			onAnimationEnd: function(){
-				{$strFlowplayerJS}
+				new MediaElementPlayer('lb4wdHtml5{$this->id}', {pluginPath:'system/modules/mediaelement/html/'});
 			}
 		}
 
@@ -160,22 +171,20 @@ JSSTR;
 	}
 
 
-
-	protected function generateSingeSrcJS($src,$size='',$caption='',$description='')
+	/**
+	 * Generate a gerneric javascript for a single file
+	 *
+	 * @param $src
+	 * @param string $size
+	 * @param string $title
+	 * @return string
+	 */
+	protected function generateSingeSrcJS($src, $size='', $title='')
 	{
 		$src = str_replace('&#61;','=',$src); // Mediabox needs "=" instead of &#61; to explode the urls
-		$caption = str_replace("'","\\'",$caption); // ' have to be escaped
-		$description = str_replace("'","\\'",$description);
-		if(strlen($size)>1){
-			$size = unserialize($size);
-		}
-		else
-		{
-			$size = array('null','null');
-		}
+		$title = str_replace("'","\\'",$title); // ' have to be escaped
 
-		$title = $caption;
-		if(strlen($description)) $title .= ' - '.$caption;
+		$size = (strlen($size)>1) ? unserialize($size) : array('null','null');
 
 return <<<JSSTR
 <script type="text/javascript">
@@ -198,11 +207,17 @@ function lightbox4ward{$this->id}()
 JSSTR;
 
 	}
-	
-	
-	protected function generateGalleryJS($src)
+
+
+	/**
+	 * Generate a gallery of multiple files
+	 *
+	 * @param $multpileSRC
+	 * @return string
+	 */
+	protected function generateGalleryJS($multpileSRC)
 	{
-		$src = unserialize($src);
+		$src = unserialize($multpileSRC);
 		$images = array();
 		$auxDate = array();
 

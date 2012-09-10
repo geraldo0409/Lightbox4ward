@@ -41,100 +41,90 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['ce_lightbox4wardAudio'] 		= '{type
 
 // Fields
 $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_type'] = array
-	(
-		'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_type'],
-		'exclude'                 => true,
-		'inputType'               => 'radio',
-		'options'				  => array(
-										'Image' 	=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['image'],
-										'Gallery'	=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['gallery'],
-										'FLV'		=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['video'] ,
-										'Audio'		=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['audio'] ,
-										'Article'	=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['article'] ,
-										'Extern'	=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['extern'] 
-									),
-		'save_callback'			  => array(array('ce_lightbox4ward','checkForDependencies')),
-		'eval'                    => array('mandatory'=>true,'submitOnChange'=>true)
-	);
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_type'],
+	'exclude'                 => true,
+	'inputType'               => 'radio',
+	'options'				  => array(
+									'Image' 	=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['image'],
+									'Gallery'	=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['gallery'],
+									'FLV'		=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['video'],
+									'Audio'		=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['audio'],
+									'Article'	=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['article'],
+									'Extern'	=> &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_types']['extern']
+								),
+	'eval'                    => array('mandatory'=>true,'submitOnChange'=>true)
+);
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_caption'] = array
-	(
-		'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_caption'],
-		'exclude'                 => true,
-		'inputType'               => 'text',
-		'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50')
-	);
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_caption'],
+	'exclude'                 => true,
+	'inputType'               => 'text',
+	'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50')
+);
 $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_description'] = array
-	(
-		'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_description'],
-		'exclude'                 => true,
-		'inputType'               => 'text',
-		'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50')
-	);
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_description'],
+	'exclude'                 => true,
+	'inputType'               => 'text',
+	'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50')
+);
 $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_size'] = array
-	(
-		'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_size'],
-		'exclude'                 => true,
-		'inputType'               => 'text',
-		'save_callback'			  => array(array('ce_lightbox4ward','normalizeSize')),
-		'eval'                    => array('maxlength'=>100, 'multiple'=>true,'size'=>2, 'tl_class'=>'w50')
-	);
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_size'],
+	'exclude'                 => true,
+	'inputType'               => 'text',
+	'save_callback'			  => array(array('ce_lightbox4ward','normalizeSize')),
+	'eval'                    => array('maxlength'=>100, 'multiple'=>true,'size'=>2, 'tl_class'=>'w50')
+);
 $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_imageSRC'] = array
-	(
-		'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_imageSRC'],
-		'exclude'                 => true,
-		'inputType'               => 'fileTree',
-		'eval'                    => array('fieldType'=>'radio', 'files'=>true, 'filesOnly'=> true, 'extensions'=>'jpg,png,jpeg,tif,bmp,gif', 'mandatory'=>true, 'tl_class'=>'clr')
-	);	
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_imageSRC'],
+	'exclude'                 => true,
+	'inputType'               => 'fileTree',
+	'eval'                    => array('fieldType'=>'radio', 'files'=>true, 'filesOnly'=> true, 'extensions'=>'jpg,png,jpeg,tif,bmp,gif', 'mandatory'=>true, 'tl_class'=>'clr')
+);
 $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_gallerySRC'] = array
-	(
-		'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_gallerySRC'],
-		'exclude'                 => true,
-		'inputType'               => 'fileTree',
-		'eval'                    => array('fieldType'=>'checkbox', 'files'=>true, 'extensions'=>'jpg,png,jpeg,tif,bmp,gif,flv,mov,mp4', 'mandatory'=>true, 'tl_class'=>'clr')
-	);	
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_gallerySRC'],
+	'exclude'                 => true,
+	'inputType'               => 'fileTree',
+	'eval'                    => array('fieldType'=>'checkbox', 'files'=>true, 'extensions'=>'jpg,png,jpeg,tif,bmp,gif,flv,mov,mp4', 'mandatory'=>true, 'tl_class'=>'clr')
+);
 $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_externURL'] = array
-	(
-		'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_externURL'],
-		'exclude'                 => true,
-		'inputType'               => 'text',
-		'explanation'			  => 'lightbox4ward_externURL',
-		'eval'                    => array('mandatory'=>true,'helpwizard'=>true, 'tl_class'=>'long clr')
-	);		
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_externURL'],
+	'exclude'                 => true,
+	'inputType'               => 'text',
+	'explanation'			  => 'lightbox4ward_externURL',
+	'eval'                    => array('mandatory'=>true,'helpwizard'=>true, 'tl_class'=>'long clr')
+);
 $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_flvSRC'] = array
-	(
-		'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_flvSRC'],
-		'exclude'                 => true,
-		'inputType'               => 'fileTree',
-		'eval'                    => array('fieldType'=>'radio', 'files'=>true, 'filesOnly'=> true, 'extensions'=>'flv,mov,swf,mp4,f4v,m4v', 'mandatory'=>true, 'tl_class'=>'clr')
-	);	
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_flvSRC'],
+	'exclude'                 => true,
+	'inputType'               => 'fileTree',
+	'eval'                    => array('fieldType'=>'checkbox', 'files'=>true, 'filesOnly'=> true, 'extensions'=>'flv,mov,swf,mp4,f4v,m4v,webm,ogv', 'mandatory'=>true, 'tl_class'=>'clr')
+);
 $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_mp3SRC'] = array
-	(
-		'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_mp3SRC'],
-		'exclude'                 => true,
-		'inputType'               => 'fileTree',
-		'eval'                    => array('fieldType'=>'radio', 'files'=>true, 'filesOnly'=> true, 'extensions'=>'mp3,aac', 'mandatory'=>true, 'tl_class'=>'clr')
-	);		
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_mp3SRC'],
+	'exclude'                 => true,
+	'inputType'               => 'fileTree',
+	'eval'                    => array('fieldType'=>'radio', 'files'=>true, 'filesOnly'=> true, 'extensions'=>'mp3,aac', 'mandatory'=>true, 'tl_class'=>'clr')
+);
 $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_closeOnEnd'] = array
-	(
-		'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_closeOnEnd'],
-		'exclude'                 => true,
-		'inputType'               => 'checkbox',
-		'eval'                    => array('tl_class'=>'w50')
-	);	
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['lightbox4ward_closeOnEnd'],
+	'exclude'                 => true,
+	'inputType'               => 'checkbox',
+	'eval'                    => array('tl_class'=>'w50')
+);
+
 
 class ce_lightbox4ward extends System
 {
-
-	public function checkForDependencies($varValue)
-	{
-		if($varValue == 'FLV' && !in_array('flowplayer',$this->Config->getActiveModules()))
-		{
-			throw new Exception('Error: <a href="http://contao.org/de/extension-list/view/flowplayer.de.html" style="text-decoration: underline;">Flowplayer Extension</a> not installed! Please install it to use Video playback!');
-		}
-
-		return $varValue;
-	}
 
 
 	/**
