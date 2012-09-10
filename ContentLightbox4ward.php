@@ -123,7 +123,7 @@ class ContentLightbox4ward extends ContentElement
 	protected function generateMediaJS($src, $size='', $title='', $media = 'video')
 	{
 		// load Mediaelement
-		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/lightbox4ward/html/mediaelement/mediaelement-and-player.js';
+		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/lightbox4ward/html/mediaelement/mediaelement-and-player_src.js';
 		$GLOBALS['TL_CSS'][] = 'system/modules/lightbox4ward/html/mediaelement/mediaelementplayer.css';
 
 		$title = str_replace("'","\\'",trim($title)); // ' have to be escaped
@@ -142,7 +142,7 @@ class ContentLightbox4ward extends ContentElement
 			$strSources .= '<source type="'.$media.'/'.substr($file,strrpos($file,'.')+1).'" src="'.$file.'">';
 		}
 
-		$strInlineVar = 'var lb4wdHtml5Var'.$this->id.' = \'<'.$media.' id="lb4wdHtml5'.$this->id.'" width="'.$size[0].'" height="'.$size[1].'" controls="controls" preload="none">'.$strSources.'</'.$media.'>\';';
+		$strInlineVar = 'var lb4wdHtml5Var'.$this->id.' = \'<'.$media.' id="lb4wdHtml5'.$this->id.'" width="'.$size[0].'" height="'.$size[1].'" controls="controls" preload="auto">'.$strSources.'</'.$media.'>\';';
 
 return <<<JSSTR
 <script type="text/javascript">
@@ -161,7 +161,9 @@ function lightbox4ward{$this->id}()
 		displayTitle: $displayTitle,
 		events: {
 			onAnimationEnd: function(){
-				new MediaElementPlayer('lb4wdHtml5{$this->id}', {pluginPath:'system/modules/mediaelement/html/'});
+				var me = new MediaElementPlayer('lb4wdHtml5{$this->id}', {pluginPath:'system/modules/lightbox4ward/html/mediaelement/', plugins: ['flash', 'silverlight'], features: ['playpause','progress','current','duration','tracks','volume','fullscreen']});
+				me.play();
+
 			}
 		}
 
