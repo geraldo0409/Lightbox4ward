@@ -1,32 +1,17 @@
 <?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 /**
- * TYPOlight webCMS
- * Copyright (C) 2005 Leo Feyer
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation, either
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program. If not, please visit the Free
- * Software Foundation website at http://www.gnu.org/licenses/.
  *
  * PHP version 5
- * @copyright  4ward.media 2010
+ * @copyright  4ward.media 2012
  * @author     Christoph Wiechert <christoph.wiechert@4wardmedia.de>
  * @package    lightbox4ward
  * @license    LGPL 
  * @filesource
  */
 
-class ContentLightbox4ward extends ContentElement {
+class ContentLightbox4ward extends ContentElement
+{
 	
 
 	/**
@@ -81,7 +66,8 @@ class ContentLightbox4ward extends ContentElement {
 		$this->Template->lbType = $this->lightbox4ward_type;
 		$this->Template->lbSize = unserialize($this->lightbox4ward_size);
 		
-		switch($this->lightbox4ward_type){
+		switch($this->lightbox4ward_type)
+		{
 			case 'Image':
 				$this->Template->js = $this->generateSingeSrcJS($this->lightbox4ward_imageSRC,'',$this->lightbox4ward_caption,$this->lightbox4ward_description);
 				$this->Template->href = $this->lightbox4ward_imageSRC;
@@ -102,43 +88,115 @@ class ContentLightbox4ward extends ContentElement {
 				$this->Template->js = $this->generateSingeSrcJS('#mb_lightbox4wardContent'.$this->id,$this->lightbox4ward_size,$this->lightbox4ward_caption,$this->lightbox4ward_description);
 				$this->Template->href = $this->Environment->request.'#mb_lightbox4wardContent'.$this->id;
 				
-				$this->Template->embed_post .= '<div id="mb_lightbox4wardContent'.$this->id.'" class="lightbox4wardContent" style="display:none;"><div class="lightbox4wardContentInside">';
+				$this->Template->embed_post .= '<div style="display:none;"><div id="mb_lightbox4wardContent'.$this->id.'" class="lightbox4wardContent"><div class="lightbox4wardContentInside">';
 				$this->Template->embed_post .= $this->getArticle($this->articleAlias,false,true);
-				$this->Template->embed_post .= '</div></div>';
+				$this->Template->embed_post .= '</div></div></div>';
 			break;
 			
 			case 'FLV':
-				$this->Template->js = $this->generateSingeSrcJS(TL_PATH.'/'.$this->lightbox4ward_flvSRC,$this->lightbox4ward_size,$this->lightbox4ward_caption,$this->lightbox4ward_description);
+				$this->Template->js = $this->generateFlowplayerJS($this->lightbox4ward_flvSRC, $this->lightbox4ward_size, $this->lightbox4ward_caption, $this->lightbox4ward_description);
 				$this->Template->href = $this->lightbox4ward_flvSRC;
 			break;
 			
 			case 'Audio':
-				$this->Template->js = $this->generateSingeSrcJS(TL_PATH.'/'.$this->lightbox4ward_mp3SRC,$this->lightbox4ward_size,$this->lightbox4ward_caption,$this->lightbox4ward_description);
+				$this->Template->js = $this->generateFlowplayerJS(TL_PATH.'/'.$this->lightbox4ward_mp3SRC,$this->lightbox4ward_size,$this->lightbox4ward_caption,$this->lightbox4ward_description);
 				$this->Template->href = $this->lightbox4ward_mp3SRC;
 			break;			
 		}
 		
 	}	
 
-	protected function generateSingeSrcJS($src,$size='',$caption='',$description=''){
+
+	protected function generateFlowplayerJS($src,$size='',$caption='',$description='')
+	{
 		$src = str_replace('&#61;','=',$src); // Mediabox needs "=" instead of &#61; to explode the urls
 		$caption = str_replace("'","\\'",$caption); // ' have to be escaped
 		$description = str_replace("'","\\'",$description);
 		if(strlen($size)>1){
 			$size = unserialize($size);
-			$size = $size[0].' '.$size[1];
-		} 
-		
-		return 	 '<script type="text/javascript"><!--//--><![CDATA[//><!--'."\n"
-					."function lightbox4ward{$this->id}(){"
-						.'Mediabox.open([['
-							."'$src',"
-							."'$caption".(strlen($description)>1 ? '::'.$description : '')."'"
-							.((strlen($size)>1) ? ",'$size'" : '')
-						.']],0,Mediabox.customOptions);'
-						.(($this->lightbox4ward_closeOnEnd == '1') ? 'NBcloseOnExit=true;' : 'NBcloseOnExit=false;')
-					.'}'."\n"
-				.'//--><!]]></script>';
+		}
+
+		$title = $caption;
+		if(strlen($description)) $title .= ' - '.$caption;
+
+
+		$objFlowplayer = new Flowplayer();
+		$objFlowplayer->injectJavascript();
+		$arrCfg = array('clip' => array('url' => $src));
+		// add closeOnEnd option
+		if($this->lightbox4ward_closeOnEnd)
+		{
+			$arrCfg['clip']['onBeforeFinish'] = 'function(){CeraBoxWindow.close();}';
+		}
+		$strFlowplayerJS = $objFlowplayer->generate($arrCfg);
+
+return <<<JSSTR
+<script type="text/javascript">
+var flowplayerID{$this->id} = '<div id="{$objFlowplayer->id}" style="width:{$size[0]}px;height:$size[1]px;"></div>';
+function lightbox4ward{$this->id}()
+{
+	var elems = [
+		new Element('a',
+		{
+			href: '#\$flowplayerID{$this->id}',
+			title: '{$title}'
+		})
+	];
+	var cb = new CeraBox(elems,
+	{
+
+		events: {
+			onAnimationEnd: function(){
+				{$strFlowplayerJS}
+			}
+		}
+
+	});
+	elems[0].fireEvent('click');
+}
+</script>
+JSSTR;
+
+	}
+
+
+
+	protected function generateSingeSrcJS($src,$size='',$caption='',$description='')
+	{
+		$src = str_replace('&#61;','=',$src); // Mediabox needs "=" instead of &#61; to explode the urls
+		$caption = str_replace("'","\\'",$caption); // ' have to be escaped
+		$description = str_replace("'","\\'",$description);
+		if(strlen($size)>1){
+			$size = unserialize($size);
+		}
+		else
+		{
+			$size = array('"auto"','"auto"');
+		}
+
+		$title = $caption;
+		if(strlen($description)) $title .= ' - '.$caption;
+
+return <<<JSSTR
+<script type="text/javascript">
+function lightbox4ward{$this->id}()
+{
+	var elems = [
+		new Element('a',
+		{
+			href: '{$src}',
+			title: '{$title}'
+		})
+	];
+	var cb = new CeraBox(elems,{
+		width:{$size[0]},
+		height:{$size[1]}
+	});
+	elems[0].fireEvent('click');
+}
+</script>
+JSSTR;
+
 	}
 	
 	
