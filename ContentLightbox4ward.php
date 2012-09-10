@@ -200,7 +200,8 @@ JSSTR;
 	}
 	
 	
-	protected function generateGalleryJS($src){
+	protected function generateGalleryJS($src)
+	{
 		$src = unserialize($src);
 		$images = array();
 		$auxDate = array();
@@ -307,23 +308,23 @@ JSSTR;
 		}
 		
 		
-		$str = "";
-		foreach($images AS $meta){
-			$str .= "['{$meta["src"]}','";
-			$str .= $meta['alt'];
-			$str .= "',''],";
+		$str = "\n";
+		foreach($images AS $meta)
+		{
+			$str .= "new Element('a',{href:'{$meta['src']}', title:'{$meta['alt']}' }),\n";
 		}
-		$str = substr($str,0,-1);
+		$str = substr($str,0,-2);
 		
-		return 	 '<script type="text/javascript"><!--//--><![CDATA[//><!--'."\n"
-					."function lightbox4ward{$this->id}(){"
-						.'Mediabox.open('
-							."["
-							.$str
-							."],0,Mediabox.customOptions"
-						.');'
-					.'}'."\n"
-				.'//--><!]]></script>';
+return <<<JSSTR
+<script type="text/javascript">
+function lightbox4ward{$this->id}()
+{
+	var elems = [$str];
+	var cb = new CeraBox(elems);
+	elems[0].fireEvent('click');
+}
+</script>
+JSSTR;
 	}
 }
 
