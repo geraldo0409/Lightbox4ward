@@ -171,7 +171,7 @@ JSSTR;
 		}
 		else
 		{
-			$size = array('"auto"','"auto"');
+			$size = array('null','null');
 		}
 
 		$title = $caption;
