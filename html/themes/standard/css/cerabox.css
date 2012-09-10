@@ -45,7 +45,7 @@
 	z-index: 1101;
 	display: none;
 	opacity: 0;
-	background: #fff;
+	background: #000;
 
 	-webkit-transform: scale(1);
 	-webkit-transform-origin: 0 0;
@@ -96,6 +96,11 @@
 	transform-origin: 0 100%;
 }
 
+#cerabox .cerabox-title .number {
+	float:right;
+	margin-left:20px;
+	color: #CCC;
+}
 
 #cerabox .cerabox-close {
 	position: absolute;

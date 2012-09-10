@@ -126,11 +126,13 @@ class ContentLightbox4ward extends ContentElement
 		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/lightbox4ward/html/mediaelement/mediaelement-and-player.js';
 		$GLOBALS['TL_CSS'][] = 'system/modules/lightbox4ward/html/mediaelement/mediaelementplayer.css';
 
-		$title = str_replace("'","\\'",$title); // ' have to be escaped
+		$title = str_replace("'","\\'",trim($title)); // ' have to be escaped
 
 		if(strlen($size)>1){
 			$size = unserialize($size);
 		}
+
+		$displayTitle = (strlen($title)>1) ? 'true' : 'false';
 
 		// support multiple formats
 		if(!is_array($src)) $src = array($src);
@@ -156,6 +158,7 @@ function lightbox4ward{$this->id}()
 	];
 	var cb = new CeraBox(elems,
 	{
+		displayTitle: $displayTitle,
 		events: {
 			onAnimationEnd: function(){
 				new MediaElementPlayer('lb4wdHtml5{$this->id}', {pluginPath:'system/modules/mediaelement/html/'});
@@ -182,9 +185,10 @@ JSSTR;
 	protected function generateSingeSrcJS($src, $size='', $title='')
 	{
 		$src = str_replace('&#61;','=',$src); // Mediabox needs "=" instead of &#61; to explode the urls
-		$title = str_replace("'","\\'",$title); // ' have to be escaped
+		$title = str_replace("'","\\'",trim($title)); // ' have to be escaped
 
 		$size = (strlen($size)>1) ? unserialize($size) : array('null','null');
+		$displayTitle = (strlen($title)>1) ? 'true' : 'false';
 
 return <<<JSSTR
 <script type="text/javascript">
@@ -198,6 +202,7 @@ function lightbox4ward{$this->id}()
 		})
 	];
 	var cb = new CeraBox(elems,{
+		displayTitle: $displayTitle,
 		width:{$size[0]},
 		height:{$size[1]}
 	});

@@ -119,6 +119,7 @@ window.CeraBox = new Class({
 		}
 
 		//set options
+		if(CeraBox.customOptions) this.setOptions(CeraBox.customOptions); // by PsiTrax
 		this.setOptions(options);
 
 		// Handle the passed elements
@@ -942,7 +943,7 @@ window.CeraBoxWindow = (function(window) {
 			}
 			// Set text if passed else only set display
 			if (text)
-				cerabox.getElement('.cerabox-title span').setStyle('display','block').set('text', text);
+				cerabox.getElement('.cerabox-title span').setStyle('display','block').set('html', text); // set html, not text by PsiTrax
 			else
 				cerabox.getElement('.cerabox-title span').setStyle('display','block');
 
