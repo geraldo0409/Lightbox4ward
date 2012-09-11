@@ -135,6 +135,12 @@ class ContentLightbox4ward extends ContentElement
 
 		$displayTitle = (strlen($title)>1) ? 'true' : 'false';
 
+		$closeOnEndJS = '';
+		if($this->lightbox4ward_closeOnEnd)
+		{
+			$closeOnEndJS = "vid.addEventListener('ended', function(){CeraBoxWindow.close();},false);\n";
+		}
+
 		// support multiple formats
 		if(!is_array($src)) $src = array($src);
 		$strSources = '';
@@ -164,7 +170,16 @@ function lightbox4ward{$this->id}()
 	{
 		displayTitle: $displayTitle,
 		events: {
-			onAnimationEnd: function(){
+			onAnimationEnd: function(currentItem){
+				// dont use mediaelement on mobile view
+				if(this.options.mobileView)
+				{
+					var vid = document.id('lb4wdHtml5{$this->id}').set('height','100%').set('width','100%');
+					$closeOnEndJS
+					vid.play();
+					return;
+				}
+
 				var me = new MediaElementPlayer('lb4wdHtml5{$this->id}',
 				{
 					pluginPath:'system/modules/lightbox4ward/html/mediaelement/',
