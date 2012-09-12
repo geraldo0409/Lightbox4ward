@@ -98,15 +98,18 @@ class WidgetLightbox4ward extends Widget {
 		$objTpl->link = $this->linkTitle;
 		$objTpl->title = specialchars($this->linkTitle);
 		$objTpl->target = (TL_MODE == 'BE') ? '' : ' onclick="lightbox4ward'.$this->id.'();return false;"';
-		
+
+		// todo make this better
+		$title = $this->lightbox4ward_caption.' '.$this->lightbox4ward_description;
+
 		switch($this->lightbox4ward_type){
 			case 'Image':
-				$objTpl->js = $this->generateSingeSrcJS($this->lightbox4ward_imageSRC,'',$this->lightbox4ward_caption,$this->lightbox4ward_description);
+				$objTpl->js = $this->generateSingeSrcJS($this->lightbox4ward_imageSRC, '', $title);
 				$objTpl->href = $this->lightbox4ward_imageSRC;
 			break;
 			
 			case 'Text':
-				$objTpl->js = $this->generateSingeSrcJS('#mb_lightbox4wardWidget'.$this->id,$this->lightbox4ward_size,$this->lightbox4ward_caption,$this->lightbox4ward_description);
+				$objTpl->js = $this->generateSingeSrcJS('#mb_lightbox4wardWidget'.$this->id, $this->lightbox4ward_size, $title);
 				$objTpl->href = $this->Environment->request.'#mb_lightbox4wardWidget'.$this->id;
 				
 				$objTpl->embed_post .= '<div id="mb_lightbox4wardWidget'.$this->id.'" class="lightbox4wardContent" style="display:none;"><div class="lightbox4wardContentInside">';
@@ -115,45 +118,63 @@ class WidgetLightbox4ward extends Widget {
 			break;
 			
 			case 'Extern':
-				$objTpl->js =$this->generateSingeSrcJS($this->lightbox4ward_externURL,$this->lightbox4ward_size,$this->lightbox4ward_caption,$this->lightbox4ward_description);
+				$objTpl->js =$this->generateSingeSrcJS($this->lightbox4ward_externURL, $this->lightbox4ward_size, $title);
 				$objTpl->href = $this->lightbox4ward_externURL;
 			break;
 			
 			case 'Article':
-				$objTpl->js =$this->generateSingeSrcJS('#mb_lightbox4wardContent'.$this->id,$this->lightbox4ward_size,$this->lightbox4ward_caption,$this->lightbox4ward_description);
+				$objTpl->js =$this->generateSingeSrcJS('#mb_lightbox4wardContent'.$this->id, $this->lightbox4ward_size, $title);
 				$objTpl->href = $this->Environment->request.'#mb_lightbox4wardContent'.$this->id;
 				
-				$objTpl->embed_post .= '<div id="mb_lightbox4wardContent'.$this->id.'" class="lightbox4wardContent" style="display:none;"><div class="lightbox4wardContentInside">';
+				$objTpl->embed_post .= '<div style="display:none;"><div id="mb_lightbox4wardContent'.$this->id.'" class="lightbox4wardContent"><div class="lightbox4wardContentInside">';
 				$objTpl->embed_post .= $this->getArticle($this->articleAlias,false,true);
-				$objTpl->embed_post .= '</div></div>';
+				$objTpl->embed_post .= '</div></div></div>';
 			break;
 			
 		}
 		
 		return $objTpl->parse();
 		
-	}		
-	
-	protected function generateSingeSrcJS($src,$size='',$caption='',$description=''){
-		$src = str_replace('=','=',$src); // Mediabox needs "=" instead of = to explode the urls
-		$caption = str_replace("'","\\'",$caption); // ' have to be escaped
-		$description = str_replace("'","\\'",$description);
-		if(strlen($size)>1){
-			$size = unserialize($size);
-		} else {
-			$size[0] = $size[1] = '';
-		}
-		return 	 '<script type="text/javascript"><!--//--><![CDATA[//><!--'."\n"
-					."function lightbox4ward{$this->id}(){"
-						.'Mediabox.open([['
-							."'$src',"
-							."'$caption".(strlen($description)>1 ? '::'.$description : '')."',"
-							."'$size[0] $size[1]'"
-						.']],0,Mediabox.customOptions);'
-					.'}'."\n"
-				.'//--><!]]></script>';
-	}	
-	
-}
+	}
 
-?>
+	
+	/**
+	 * Generate a gerneric javascript for a single file
+	 *
+	 * @param $src
+	 * @param string $size
+	 * @param string $title
+	 * @return string
+	 */
+	protected function generateSingeSrcJS($src, $size='', $title='')
+	{
+		$src = str_replace('&#61;','=',$src); // Mediabox needs "=" instead of &#61; to explode the urls
+		$title = str_replace("'","\\'",trim($title)); // ' have to be escaped
+
+		$size = (strlen($size)>1) ? unserialize($size) : array('null','null');
+		$displayTitle = (strlen($title)>1) ? 'true' : 'false';
+
+return <<<JSSTR
+<script type="text/javascript">
+function lightbox4ward{$this->id}()
+{
+	var elems = [
+		new Element('a',
+		{
+			href: '{$src}',
+			title: '{$title}'
+		})
+	];
+	var cb = new CeraBox(elems,{
+		displayTitle: $displayTitle,
+		width:{$size[0]},
+		height:{$size[1]}
+	});
+	elems[0].fireEvent('click');
+}
+</script>
+JSSTR;
+	}
+
+
+}
