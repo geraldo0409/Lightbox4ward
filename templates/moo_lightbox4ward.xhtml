@@ -19,9 +19,9 @@ CeraBox.customOptions = {
 window.addEvent("domready", function()
 {
 	var g = {}; var e = [];
-	document.getElements('a[data-lightbox]').each(function(el){
+	document.getElements('a[rel^=lightbox]').each(function(el){
 		var gal;
-		if(gal = el.get('data-lightbox').match(/^([^\d][^ ]+)/)) {
+		if(gal = el.get('rel').match(/^lightbox\[?([^\d\] ]+)/i)) {
 			gal=gal[0];
 			(typeOf(g[gal]) != 'array') ? g[gal] = new Array(el) : g[gal].push(el);
 		}
