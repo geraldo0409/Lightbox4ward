@@ -102,6 +102,12 @@
 	color: #CCC;
 }
 
+.cerabox-autoplay {
+    border: 1px solid red;
+    position: absolute;
+
+}
+
 #cerabox .cerabox-close {
 	position: absolute;
 	top: -20px;

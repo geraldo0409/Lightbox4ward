@@ -49,6 +49,10 @@ window.CeraBox = new Class({
 		ajax:			            null,
 		swf:			            null,
 		group:			            true,
+        autoplay:                   true,
+        autoplayTime:               5000,
+        autoplayCloseatEnd:         false,
+        autoplayLabels:             ['Start', 'Pause'],
 		width:			            null,
 		height:			            null,
 		displayTitle:	            true,
@@ -109,12 +113,12 @@ window.CeraBox = new Class({
 	 */
 	initialize: function(elements, options) {
 		this.boxWindow = CeraBoxWindow;
-
+        //console.log(this);
 		elements = $$(elements);
-
 		if (options && typeOf(options.group)!='null' && options.group===false && elements.length>1) {
 			elements.each(function(item){
 				item.store('cerabox', new CeraBox(item, options));
+
 			});
 		}
 
@@ -187,6 +191,8 @@ window.CeraBox = new Class({
 				}.bind(this));
 			}
 		}.bind(this));
+
+
 	},
 
 	/**
@@ -605,12 +611,11 @@ window.CeraBoxWindow = (function(window) {
 		cerabox             = null;
 
 	var boxWindow = new Class({
-
+        autoPlayButton: false,
 		initialize: function() {
-			window.addEvent('domready', function(){
+            window.addEvent('domready', function(){
 				// Add html
 				initHTML();
-
 				this.updateWindow();
 
 				// Terminate loading
@@ -643,10 +648,13 @@ window.CeraBoxWindow = (function(window) {
 			window.addEvent('resize', this.updateWindow.bind(this));
 			window.addEvent('scroll', this.updateWindow.bind(this, 'scroll'));
 			window.addEvent('orientationchange', this.updateWindow.bind(this));
+
+
 		},
 
 		updateWindow: function(type) {
-			this.setViewport();
+
+            this.setViewport();
 
 			// Window not open no need to update further
 			if (!windowOpen || null===currentInstance || busy || (type=='scroll' && !currentInstance.options.mobileView)) {
@@ -773,6 +781,31 @@ window.CeraBoxWindow = (function(window) {
 
 			currentInstance = instance;
 
+            /* Init Autoplay by Joe Ray Gregory */
+            var isSlideshowRunning = false,
+                self = this;
+
+            if(currentInstance.options.autoplay && !self.autoPlayButton) {
+                self.autoPlayButton = new Element('a', {
+                    'text': currentInstance.options.autoplayLabels[0],
+                    'class':'cerabox-autoplay',
+                    'events':{
+                        'click':function(event){
+                            event.preventDefault();
+
+                            if(!isSlideshowRunning && (currentInstance.collection.length-1 != (currentInstance.currentItem+1))) {
+                                self.autoplayInstance = self.autoplayStart.periodical(currentInstance.options.autoplayTime);
+                                this.set('text', currentInstance.options.autoplayLabels[1]);
+                                isSlideshowRunning = true;
+                            } else {
+                                self.autoPlayStop();
+                                this.set('text', currentInstance.options.autoplayLabels[0]);
+                                isSlideshowRunning = false;
+                            }
+                        }
+                    }
+                }).inject(document.getElement('.cerabox-title'));
+            }
 			busy = true;
 			// Protection
 			cerabox.getElement('.cerabox-content-protection').setStyle('display','none');
@@ -1076,7 +1109,28 @@ window.CeraBoxWindow = (function(window) {
 		 */
 		sizeStringToInt: function(size, dimension){
 			return sizeStringToInt(size, dimension);
-		}
+		},
+
+        autoplayInstance: false,
+
+        autoplayStart: function() {
+            if(currentInstance.collection.length > currentInstance.currentItem+1){
+                currentInstance.collection[currentInstance.currentItem+1].fireEvent('click', event);
+            } else {
+                _instance.autoPlayStop();
+                if(currentInstance.options.autoplayCloseatEnd) {
+                    var closeLightbox = function() {
+                        _instance.close();
+                    }
+                    closeLightbox();
+                } else {
+                    _instance.autoPlayButton.set('text', currentInstance.options.autoplayLabels[0]);
+                }
+            }
+        },
+        autoPlayStop: function() {
+            clearInterval(_instance.autoplayInstance);
+        }
 	}),
 
 	_instance = new boxWindow();
@@ -1100,6 +1154,7 @@ window.CeraBoxWindow = (function(window) {
 			cerabox.getElement('.cerabox-left').setStyle('display','block').addEvent('click', function(event){
 				event.stopPropagation();
 				if (!busy) {
+
 					this.setStyle('display','none').removeEvents('click');
 					currentInstance.collection[currentInstance.currentItem-1].fireEvent('click', event);
 				}
@@ -1109,11 +1164,14 @@ window.CeraBoxWindow = (function(window) {
 			cerabox.getElement('.cerabox-right').setStyle('display','block').addEvent('click', function(event){
 				event.stopPropagation();
 				if (!busy) {
+                    //console.log(currentInstance.collection);
 					this.setStyle('display','none').removeEvents('click');
 					currentInstance.collection[currentInstance.currentItem+1].fireEvent('click', event);
 				}
 			});
 		}
+
+
 	}
 
 	/**
@@ -1383,6 +1441,7 @@ window.CeraBoxWindow = (function(window) {
 	function initHTML() {
 		var wrapper = document.id(document.body);
 
+
 		if (!wrapper.getElement('#cerabox')) {
 			wrapper.adopt([
 				new Element('div',{'id':'cerabox-loading'}).adopt(new Element('div')),
@@ -1390,14 +1449,14 @@ window.CeraBoxWindow = (function(window) {
 				cerabox = new Element('div',{'id':'cerabox'}).adopt([
 					new Element('div', {'class':'cerabox-content'}),
 					new Element('div', {'class':'cerabox-title'}).adopt(new Element('span')),
-					new Element('a', {'class':'cerabox-close','events':{'click':function(event){event.stop();_instance.close()}}}),
+					new Element('a', {'class':'cerabox-close','events':{'click':function(event){event.stop();_instance.close()}}}),,
 					new Element('a', {'class':'cerabox-left'}).adopt(new Element('span')),
 					new Element('a', {'class':'cerabox-right'}).adopt(new Element('span')),
 					new Element('div', {'class':'cerabox-content-protection'}),
 					new Element('div', {'id':'cerabox-ajaxPreLoader','styles':{'float':'left','overflow':'hidden','display':'block'}})
 				])
 			]);
-		}
+        }
 	}
 
 	/**
