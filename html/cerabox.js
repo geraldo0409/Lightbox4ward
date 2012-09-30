@@ -602,6 +602,7 @@ window.CeraBoxWindow = (function(window) {
 		currentInstance     = null,
 		currentDimension    = {x:0, y:0},
 		hudTimer            = null,
+		historyPushed		= false,
 
 		// Touch
 		startPos            = {x:null, y:null},
@@ -689,6 +690,7 @@ window.CeraBoxWindow = (function(window) {
 			clearInterval(loaderTimer);
 			clearInterval(hudTimer);
 			document.id('cerabox-loading').setStyle('display', 'none');
+			History.replaceState({},document.title, document.location.href.replace('?lb',''));
 
 			if (currentInstance.options.mobileView) {
 				document.id('cerabox-background').setStyles({
@@ -932,6 +934,16 @@ window.CeraBoxWindow = (function(window) {
 
 			if (!currentInstance.options.mobileView)
 				cerabox.getElement('.cerabox-content').setStyle('opacity', 1);
+
+			if(CeraBoxWindow.historyPushed)
+			{
+				History.replaceState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
+			}
+			else
+			{
+				History.pushState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
+				CeraBoxWindow.historyPushed = true;
+			}
 
 			// onOpen event
 			currentInstance.options.events.onOpen.call(currentInstance, currentItem, currentInstance.collection);
@@ -1606,3 +1618,7 @@ Elements.implement({
 });
 
 })(window);
+
+window.addEvent('statechange',function(){
+	CeraBoxWindow.close();
+});
