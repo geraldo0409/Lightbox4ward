@@ -690,7 +690,10 @@ window.CeraBoxWindow = (function(window) {
 			clearInterval(loaderTimer);
 			clearInterval(hudTimer);
 			document.id('cerabox-loading').setStyle('display', 'none');
-			History.replaceState({},document.title, document.location.href.replace('?lb',''));
+
+			CeraBoxWindow.historyReplace = true;
+			History.replaceState({lbOpen:false},document.title, document.location.href.replace('?lb',''));
+			CeraBoxWindow.historyReplace = false;
 
 			if (currentInstance.options.mobileView) {
 				document.id('cerabox-background').setStyles({
@@ -935,14 +938,14 @@ window.CeraBoxWindow = (function(window) {
 			if (!currentInstance.options.mobileView)
 				cerabox.getElement('.cerabox-content').setStyle('opacity', 1);
 
-			if(CeraBoxWindow.historyPushed)
+			if(CeraBoxWindow.pushedHistory)
 			{
 				History.replaceState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
 			}
 			else
 			{
+				CeraBoxWindow.pushedHistory = true;
 				History.pushState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
-				CeraBoxWindow.historyPushed = true;
 			}
 
 			// onOpen event
@@ -1620,5 +1623,9 @@ Elements.implement({
 })(window);
 
 window.addEvent('statechange',function(){
-	CeraBoxWindow.close();
+	if(!document.location.href.match(/\?lb$/) && CeraBoxWindow.getWindowOpen() && !CeraBoxWindow.historyReplace)
+	{
+		CeraBoxWindow.close();
+		CeraBoxWindow.pushedHistory = false;
+	}
 });
