@@ -2,28 +2,28 @@
 	position: fixed;
 	top: 50%;
 	left: 50%;
-	width: 48px;
-	height: 48px;
-	margin-top: -24px;
-	margin-left: -24px;
+	width: 40px;
+	height: 40px;
+	margin-top: -20px;
+	margin-left: -20px;
 	cursor: pointer;
 	overflow: hidden;
 	z-index: 1106;
 	display: none;
-	padding:5px;
-	background-color: #fff;
- 	box-shadow: 0px 0px 13px rgba(0, 0, 0, 0.80);
-    -moz-box-shadow: 0px 0px 13px rgba(0, 0, 0, 0.80);
-    -webkit-box-shadow: 0px 0px 13px rgba(0, 0, 0, 0.80);
-	-webkit-border-radius: 7px;
-	-moz-border-radius: 7px;
-	border-radius: 7px;
+
+	-webkit-transform: scale(1);
+	-webkit-transform-origin: 50% 50%;
+	transform: scale(1);
+	transform-origin: 50% 50%;
 }
 
 #cerabox-loading div {
-	width: 48px;
-	height: 48px;
-	background-image: url("../img/loading.gif");
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 40px;
+	height: 480px;
+	background-image: url("../img/cerabox.png");
 }
 
 #cerabox-background {
@@ -34,7 +34,7 @@
 	height: 100%;
 	z-index: 1100;
 	display: none;
-	background: transparent;
+	background: #000;
 	opacity: .5;
 }
 
@@ -45,20 +45,27 @@
 	z-index: 1101;
 	display: none;
 	opacity: 0;
-	background: #FFF;
+	background: #000;
 
- 	box-shadow: 0px 0px 17px 4px rgba(255, 255, 255, 0.60);
-    -moz-box-shadow: 0px 0px 17px 4px rgba(255, 255, 255, 0.60);
-    -webkit-box-shadow: 0px 0px 17px 4px rgba(255, 255, 255, 0.60);
+	-webkit-transform: scale(1);
+	-webkit-transform-origin: 0 0;
+	transform: scale(1);
+	transform-origin: 0 0;
 }
 
 #cerabox .cerabox-content {
 	width: 100%;
 	height: 100%;
+	padding: 0;
 	outline: none;
 	position: relative;
 	overflow: hidden;
 	z-index: 1102;
+	border: 0px solid #fff;
+	/*CSS3*/
+	-moz-box-shadow: 0 0 30px -5px #333;
+	-webkit-box-shadow: 0 0 30px -5px #333;
+	box-shadow: 0 0 30px -5px #333;
 }
 
 #cerabox span.cerabox-error, #cerabox .cerabox-title span {
@@ -66,27 +73,33 @@
 	display: block;
 	font-family: Helvetica;
 	font-size: 12px;
-	color: #CCC;
+	color: #000;
 	line-height: normal;
-	background-color: #171717;
 }
 #cerabox span.cerabox-error { text-align: justify; }
-#cerabox .cerabox-title span { display: none;}
+#cerabox .cerabox-title span { display: none; color: #fff; }
 
 #cerabox .cerabox-title {
 	z-index: 1102;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	color: #FFF;
 	text-align: left;
+	background: #000;
+	background: rgba(0,0,0,.8);
 	width: 100%;
- 	box-shadow: 0px 0px 17px 4px rgba(255, 255, 255, 0.60);
-    -moz-box-shadow: 0px 0px 17px 4px rgba(255, 255, 255, 0.60);
-    -webkit-box-shadow: 0px 0px 17px 4px rgba(255, 255, 255, 0.60);
 
+	-webkit-transform: scale(1);
+	-webkit-transform-origin: 0 100%;
+	transform: scale(1);
+	transform-origin: 0 100%;
 }
 
 #cerabox .cerabox-title .number {
 	float:right;
 	margin-left:20px;
-	color: #666;
+	color: #CCC;
 }
 
 .cerabox-autoplay {
@@ -101,9 +114,14 @@
 	right: -20px;
 	width: 40px;
 	height: 40px;
-	background: url('../img/close.png') no-repeat;
+	background: url('../img/cerabox.png') -42px 0px no-repeat;
 	cursor: pointer;
 	z-index: 1105;
+
+	-webkit-transform: scale(1);
+	-webkit-transform-origin: 100% 0;
+	transform: scale(1);
+	transform-origin: 100% 0;
 }
 
 #cerabox .cerabox-content img.image {
@@ -127,7 +145,7 @@
 
 #cerabox a.cerabox-left, #cerabox a.cerabox-right {
 	position: absolute;
-	bottom: 0;
+	bottom: 0px;
 	height: 100%;
 	width: 35%;
 	cursor: pointer;
@@ -138,11 +156,21 @@
 }
 
 #cerabox a.cerabox-left {
-	left: 0;
+	left: 0px;
+
+	-webkit-transform: scale(1);
+	-webkit-transform-origin: 0 50%;
+	transform: scale(1);
+	transform-origin: 0 50%;
 }
 
 #cerabox a.cerabox-right {
-	right: 0;
+	right: 0px;
+
+	-webkit-transform: scale(1);
+	-webkit-transform-origin: 100% 50%;
+	transform: scale(1);
+	transform-origin: 100% 50%;
 }
 
 #cerabox a.cerabox-left span, #cerabox a.cerabox-right span {
@@ -157,14 +185,16 @@
 	display: block;
 }
 
-#cerabox a.cerabox-left span, #cerabox.mobile a.cerabox-left span {
-	background-image: url('../img/prev.png');
+#cerabox a.cerabox-left:hover span, #cerabox.mobile a.cerabox-left span {
+	background-image: url('../img/cerabox.png');
+	background-position: -42px -40px;
 	background-repeat: no-repeat;
 	left: -20px;
 }
 
-#cerabox a.cerabox-right span, #cerabox.mobile a.cerabox-right span {
-	background-image: url('../img/next.png');
+#cerabox a.cerabox-right:hover span, #cerabox.mobile a.cerabox-right span {
+	background-image: url('../img/cerabox.png');
+	background-position: -42px -80px;
 	background-repeat: no-repeat;
 	right: -20px;
 }
@@ -198,11 +228,6 @@
 	background: #000;
 }
 
-#cerabox.mobile .cerabox-title
-{
-	position: absolute;
-	top: 0;
-}
 #cerabox.mobile .cerabox-content {
 	background: #fff;
 	/*CSS3*/
@@ -210,16 +235,12 @@
 	-webkit-box-shadow: none;
 	box-shadow: none;
 }
-#cerabox.mobile .cerabox-title .number {
-	margin-right:45px
-}
 
 #cerabox.mobile .cerabox-content :first-child {
 	background: #fff;
 }
 
 #cerabox.mobile .cerabox-close {
-	background-image: url(../img/closeMobile.png);
 	top: 2px !important;
 	right: 0 !important;
 }
@@ -233,5 +254,21 @@
 }
 
 #cerabox.mobile a.cerabox-left, #cerabox.mobile a.cerabox-right {
-	width: 30%;
+	width: 10%;
+}
+
+/* @2x
+-------------------------------------------------------------------------------*/
+@media  only screen and (-webkit-min-device-pixel-ratio: 2),
+		only screen and (min-device-pixel-ratio: 2) {
+
+	#cerabox-loading div,
+	#cerabox .cerabox-close,
+	#cerabox a.cerabox-left:hover span, #cerabox.mobile a.cerabox-left span,
+	#cerabox a.cerabox-right:hover span, #cerabox.mobile a.cerabox-right span {
+		/* Reference the @2x Sprite */
+		background-image: url('../img/cerabox@2x.png');
+		/* Translate the @2x sprite's dimensions back to 1x */
+		background-size: 82px auto;
+	}
 }

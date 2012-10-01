@@ -49,7 +49,7 @@ window.CeraBox = new Class({
 		ajax:			            null,
 		swf:			            null,
 		group:			            true,
-        autoplay:                   true,
+        autoplay:                   false,
         autoplayTime:               5000,
         autoplayCloseatEnd:         false,
         autoplayLabels:             ['Start', 'Pause'],
@@ -318,7 +318,6 @@ window.CeraBox = new Class({
 					inlineEleClone.setStyle('width', ceraBox.options.width?ceraBox.options.width:inlineEleClone.getScrollSize().x);
 					inlineEleClone.setStyle('height', ceraBox.options.height?ceraBox.options.height:inlineEleClone.getSize().y);
 				}
-
 				var dimension = ceraBox.boxWindow.getSizeElement(inlineEleClone);
 
 				ceraBox.boxWindow.onLoad(dimension.width, dimension.height)
@@ -692,7 +691,9 @@ window.CeraBoxWindow = (function(window) {
 			document.id('cerabox-loading').setStyle('display', 'none');
 
 			CeraBoxWindow.historyReplace = true;
-			History.replaceState({lbOpen:false},document.title, document.location.href.replace('?lb',''));
+// TODO: fix this on android
+			if(!Browser.Platform.android)
+				History.replaceState({lbOpen:false},document.title, document.location.href.replace('?lb',''));
 			CeraBoxWindow.historyReplace = false;
 
 			if (currentInstance.options.mobileView) {
@@ -940,12 +941,16 @@ window.CeraBoxWindow = (function(window) {
 
 			if(CeraBoxWindow.pushedHistory)
 			{
-				History.replaceState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
+				// TODO: fix this on android
+				if(!Browser.Platform.android)
+					History.replaceState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
 			}
 			else
 			{
 				CeraBoxWindow.pushedHistory = true;
-				History.pushState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
+				// TODO: fix this on android
+				if(!Browser.Platform.android)
+					History.pushState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
 			}
 
 			// onOpen event
@@ -1622,8 +1627,9 @@ Elements.implement({
 
 })(window);
 
+
 window.addEvent('statechange',function(){
-	if(!document.location.href.match(/\?lb$/) && CeraBoxWindow.getWindowOpen() && !CeraBoxWindow.historyReplace)
+	if(document.location.href.match(/\?lb$/) == null && CeraBoxWindow.getWindowOpen() && !CeraBoxWindow.historyReplace)
 	{
 		CeraBoxWindow.close();
 		CeraBoxWindow.pushedHistory = false;

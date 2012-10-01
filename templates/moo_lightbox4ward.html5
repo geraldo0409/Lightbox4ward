@@ -1,17 +1,19 @@
 <?php
 // Add style sheet
-$theme = $GLOBALS['TL_CONFIG']['lightbox4ward_theme'] ? 'standard' : $GLOBALS['TL_CONFIG']['lightbox4ward_theme'];
+$theme = ($GLOBALS['TL_CONFIG']['lightbox4ward_theme']) ? $GLOBALS['TL_CONFIG']['lightbox4ward_theme'] : 'standard';
 $GLOBALS['TL_CSS']['lightbox4ward_css'] = TL_SCRIPT_URL.'system/modules/lightbox4ward/html/themes/'.$theme.'/css/cerabox.css|screen';
+$GLOBALS['TL_CSS'][] = TL_SCRIPT_URL.'system/modules/lightbox4ward/html/mediaelement/css/mediaelementplayer.min.css|screen';
 ?>
 
 <script src="<?php echo TL_SCRIPT_URL; ?>system/modules/lightbox4ward/html/cerabox.js"></script>
+<script src="<?php echo TL_SCRIPT_URL; ?>system/modules/lightbox4ward/html/mediaelement/js/mediaelement-and-player.min.js"></script>
 <script src="<?php echo TL_SCRIPT_URL; ?>plugins/history.js/mootools.history.js"></script>
 <script>
 CeraBox.customOptions = {
 	displayOverlay: <?php echo $GLOBALS['TL_CONFIG']['lightbox4ward_displayOverlay'] ? 'true' : 'false'; ?>,
 	fixedPosition: <?php echo $GLOBALS['TL_CONFIG']['lightbox4ward_fixedPosition'] ? 'true' : 'false'; ?>,
 	preventScrolling: <?php echo $GLOBALS['TL_CONFIG']['lightbox4ward_preventScrolling'] ? 'true' : 'false'; ?>,
-	animation: "<?php echo $GLOBALS['TL_CONFIG']['lightbox4ward_preventScrolling'] ? $GLOBALS['TL_CONFIG']['lightbox4ward_preventScrolling'] : 'fade'; ?>",
+	animation: "<?php echo $GLOBALS['TL_CONFIG']['lightbox4ward_animation'] ? $GLOBALS['TL_CONFIG']['lightbox4ward_animation'] : 'fade'; ?>",
 	titleFormat: "<?php echo addcslashes($GLOBALS['TL_CONFIG']['lightbox4ward_titleFormat'] ? $GLOBALS['TL_CONFIG']['lightbox4ward_titleFormat'] : '"<div class="number">{number} / {total}</div><div class="title">{title}</div>"','"'); ?>"
 };
 
