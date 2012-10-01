@@ -561,7 +561,7 @@ window.CeraBox = new Class({
 		{
 			event = new Event(event);
 			event.preventDefault();
-			this.clickPosition = {x: event.x, y:event.y};
+			this.clickPosition = {x: event.client.x, y:event.client.y};
 		}
 
 		if (this.boxWindow.getBusy())
@@ -695,7 +695,7 @@ window.CeraBoxWindow = (function(window) {
 
 			CeraBoxWindow.historyReplace = true;
 // TODO: fix this on android
-//			if(!Browser.Platform.android)				History.replaceState({lbOpen:false},document.title, document.location.href.replace('?lb',''));
+			if(!Browser.Platform.android)				History.replaceState({lbOpen:false},document.title, document.location.href.replace('?lb',''));
 			CeraBoxWindow.historyReplace = false;
 
 			if (currentInstance.options.mobileView) {
@@ -944,13 +944,13 @@ window.CeraBoxWindow = (function(window) {
 			if(CeraBoxWindow.pushedHistory)
 			{
 				// TODO: fix this on android
-//				if(!Browser.Platform.android) History.replaceState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
+				if(!Browser.Platform.android) History.replaceState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
 			}
 			else
 			{
 				CeraBoxWindow.pushedHistory = true;
 				// TODO: fix this on android
-//				if(!Browser.Platform.android) History.pushState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
+				if(!Browser.Platform.android) History.pushState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
 			}
 
 			// onOpen event
@@ -1634,8 +1634,6 @@ Elements.implement({
 
 })(window);
 
-/*
-
 window.addEvent('statechange',function(){
 	if(document.location.href.match(/\?lb$/) == null && CeraBoxWindow.getWindowOpen() && !CeraBoxWindow.historyReplace)
 	{
@@ -1643,4 +1641,3 @@ window.addEvent('statechange',function(){
 		CeraBoxWindow.pushedHistory = false;
 	}
 });
-*/
