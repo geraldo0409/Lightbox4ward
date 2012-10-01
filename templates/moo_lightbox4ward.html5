@@ -1,11 +1,11 @@
 <?php
 // Add style sheet
 $theme = $GLOBALS['TL_CONFIG']['lightbox4ward_theme'] ? 'standard' : $GLOBALS['TL_CONFIG']['lightbox4ward_theme'];
-$GLOBALS['TL_CSS']['lightbox4ward_css'] = TL_SCRIPT_URL.'system/modules/lightbox4ward/html/themes/'.$theme.'standard/css/cerabox.css|screen';
+$GLOBALS['TL_CSS']['lightbox4ward_css'] = TL_SCRIPT_URL.'system/modules/lightbox4ward/html/themes/'.$theme.'/css/cerabox.css|screen';
 ?>
 
 <script src="<?php echo TL_SCRIPT_URL; ?>system/modules/lightbox4ward/html/cerabox.js"></script>
-
+<script src="<?php echo TL_SCRIPT_URL; ?>plugins/history.js/mootools.history.js"></script>
 <script>
 CeraBox.customOptions = {
 	displayOverlay: <?php echo $GLOBALS['TL_CONFIG']['lightbox4ward_displayOverlay'] ? 'true' : 'false'; ?>,
@@ -34,5 +34,6 @@ window.addEvent("domready", function()
 		el.cerabox();
 	});
 });
+
 
 </script>
