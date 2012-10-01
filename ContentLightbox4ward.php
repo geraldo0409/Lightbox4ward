@@ -122,11 +122,6 @@ class ContentLightbox4ward extends ContentElement
 	 */
 	protected function generateMediaJS($src, $size='', $title='', $media = 'video')
 	{
-		// load Mediaelement
-		$GLOBALS['TL_HEAD'][] = '<script src="system/modules/lightbox4ward/html/mediaelement/js/mediaelement-and-player.js"></script>';
-		$GLOBALS['TL_CSS'][] = 'system/modules/lightbox4ward/html/mediaelement/css/mediaelementplayer.min.css||static';
-
-
 		$title = str_replace("'","\\'",trim($title)); // ' have to be escaped
 
 		if(strlen($size)>1){
@@ -169,6 +164,8 @@ function lightbox4ward{$this->id}()
 	var cb = new CeraBox(elems,
 	{
 		displayTitle: $displayTitle,
+		width: {$size[0]},
+		height: {$size[1]},
 		events: {
 			onAnimationEnd: function(currentItem){
 				// dont use mediaelement on mobile view
@@ -192,7 +189,7 @@ function lightbox4ward{$this->id}()
 		}
 
 	});
-	elems[0].fireEvent('click');
+	elems[0].fireEvent('click',window.event);
 }
 </script>
 JSSTR;
@@ -232,7 +229,7 @@ function lightbox4ward{$this->id}()
 		width:{$size[0]},
 		height:{$size[1]}
 	});
-	elems[0].fireEvent('click');
+	elems[0].fireEvent('click',window.event);
 }
 </script>
 JSSTR;
@@ -367,7 +364,7 @@ function lightbox4ward{$this->id}()
 {
 	var elems = [$str];
 	var cb = new CeraBox(elems);
-	elems[0].fireEvent('click');
+	elems[0].fireEvent('click',window.event);
 }
 </script>
 JSSTR;
