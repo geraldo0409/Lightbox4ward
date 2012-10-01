@@ -44,6 +44,7 @@ window.CeraBox = new Class({
 
 	collection: [],
 	currentItem: 0,
+	clickPosition: {x:0,y:0},
 
 	options: {
 		ajax:			            null,
@@ -113,12 +114,12 @@ window.CeraBox = new Class({
 	 */
 	initialize: function(elements, options) {
 		this.boxWindow = CeraBoxWindow;
-        //console.log(this);
+
 		elements = $$(elements);
+
 		if (options && typeOf(options.group)!='null' && options.group===false && elements.length>1) {
 			elements.each(function(item){
 				item.store('cerabox', new CeraBox(item, options));
-
 			});
 		}
 
@@ -191,8 +192,6 @@ window.CeraBox = new Class({
 				}.bind(this));
 			}
 		}.bind(this));
-
-
 	},
 
 	/**
@@ -318,6 +317,7 @@ window.CeraBox = new Class({
 					inlineEleClone.setStyle('width', ceraBox.options.width?ceraBox.options.width:inlineEleClone.getScrollSize().x);
 					inlineEleClone.setStyle('height', ceraBox.options.height?ceraBox.options.height:inlineEleClone.getSize().y);
 				}
+
 				var dimension = ceraBox.boxWindow.getSizeElement(inlineEleClone);
 
 				ceraBox.boxWindow.onLoad(dimension.width, dimension.height)
@@ -558,12 +558,17 @@ window.CeraBox = new Class({
 	// Default stuff to do when item clicked
 	_itemClick: function(event) {
 		if (event)
+		{
+			event = new Event(event);
 			event.preventDefault();
+			this.clickPosition = {x: event.x, y:event.y};
+		}
 
 		if (this.boxWindow.getBusy())
 			return false;
 
 		this.boxWindow.loading(this);
+
 
 		return true;
 	},
@@ -613,9 +618,10 @@ window.CeraBoxWindow = (function(window) {
 	var boxWindow = new Class({
         autoPlayButton: false,
 		initialize: function() {
-            window.addEvent('domready', function(){
+			window.addEvent('domready', function(){
 				// Add html
 				initHTML();
+
 				this.updateWindow();
 
 				// Terminate loading
@@ -648,13 +654,10 @@ window.CeraBoxWindow = (function(window) {
 			window.addEvent('resize', this.updateWindow.bind(this));
 			window.addEvent('scroll', this.updateWindow.bind(this, 'scroll'));
 			window.addEvent('orientationchange', this.updateWindow.bind(this));
-
-
 		},
 
 		updateWindow: function(type) {
-
-            this.setViewport();
+			this.setViewport();
 
 			// Window not open no need to update further
 			if (!windowOpen || null===currentInstance || busy || (type=='scroll' && !currentInstance.options.mobileView)) {
@@ -692,8 +695,7 @@ window.CeraBoxWindow = (function(window) {
 
 			CeraBoxWindow.historyReplace = true;
 // TODO: fix this on android
-			if(!Browser.Platform.android)
-				History.replaceState({lbOpen:false},document.title, document.location.href.replace('?lb',''));
+//			if(!Browser.Platform.android)				History.replaceState({lbOpen:false},document.title, document.location.href.replace('?lb',''));
 			CeraBoxWindow.historyReplace = false;
 
 			if (currentInstance.options.mobileView) {
@@ -942,15 +944,13 @@ window.CeraBoxWindow = (function(window) {
 			if(CeraBoxWindow.pushedHistory)
 			{
 				// TODO: fix this on android
-				if(!Browser.Platform.android)
-					History.replaceState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
+//				if(!Browser.Platform.android) History.replaceState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
 			}
 			else
 			{
 				CeraBoxWindow.pushedHistory = true;
 				// TODO: fix this on android
-				if(!Browser.Platform.android)
-					History.pushState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
+//				if(!Browser.Platform.android) History.pushState({'lbOpen':true,'url':document.location.href},document.title, "?lb");
 			}
 
 			// onOpen event
@@ -1174,7 +1174,6 @@ window.CeraBoxWindow = (function(window) {
 			cerabox.getElement('.cerabox-left').setStyle('display','block').addEvent('click', function(event){
 				event.stopPropagation();
 				if (!busy) {
-
 					this.setStyle('display','none').removeEvents('click');
 					currentInstance.collection[currentInstance.currentItem-1].fireEvent('click', event);
 				}
@@ -1184,14 +1183,11 @@ window.CeraBoxWindow = (function(window) {
 			cerabox.getElement('.cerabox-right').setStyle('display','block').addEvent('click', function(event){
 				event.stopPropagation();
 				if (!busy) {
-                    //console.log(currentInstance.collection);
 					this.setStyle('display','none').removeEvents('click');
 					currentInstance.collection[currentInstance.currentItem+1].fireEvent('click', event);
 				}
 			});
 		}
-
-
 	}
 
 	/**
@@ -1327,10 +1323,22 @@ window.CeraBoxWindow = (function(window) {
 							'top':cerabox.getStyle('top'),
 							'left':cerabox.getStyle('left')
 						});
+
+						if(currentItem.getPosition() && currentItem.getPosition().x > 0)
+						{
+							var left = (currentItem.getPosition().x - (currentInstance.options.fixedPosition?document.id(document.body).getScroll().x:0)) + 'px';
+							var top = (currentItem.getPosition().x - (currentInstance.options.fixedPosition?document.id(document.body).getScroll().x:0)) + 'px';
+						}
+						else
+						{
+							var left = currentInstance.clickPosition.x;
+							var top = currentInstance.clickPosition.y;
+						}
+
 						return cerabox.setStyles({
 							'display':'block',
-							'left':(currentItem.getPosition().x - (currentInstance.options.fixedPosition?document.id(document.body).getScroll().x:0)) + 'px',
-							'top':(currentItem.getPosition().y - (currentInstance.options.fixedPosition?document.id(document.body).getScroll().y:0)) + 'px',
+							'left':left,
+							'top':top,
 							'width':currentItem.getSize().x + 'px',
 							'height':currentItem.getSize().y + 'px',
 							'margin':0,
@@ -1461,7 +1469,6 @@ window.CeraBoxWindow = (function(window) {
 	function initHTML() {
 		var wrapper = document.id(document.body);
 
-
 		if (!wrapper.getElement('#cerabox')) {
 			wrapper.adopt([
 				new Element('div',{'id':'cerabox-loading'}).adopt(new Element('div')),
@@ -1469,14 +1476,14 @@ window.CeraBoxWindow = (function(window) {
 				cerabox = new Element('div',{'id':'cerabox'}).adopt([
 					new Element('div', {'class':'cerabox-content'}),
 					new Element('div', {'class':'cerabox-title'}).adopt(new Element('span')),
-					new Element('a', {'class':'cerabox-close','events':{'click':function(event){event.stop();_instance.close()}}}),,
+					new Element('a', {'class':'cerabox-close','events':{'click':function(event){event.stop();_instance.close()}}}),
 					new Element('a', {'class':'cerabox-left'}).adopt(new Element('span')),
 					new Element('a', {'class':'cerabox-right'}).adopt(new Element('span')),
 					new Element('div', {'class':'cerabox-content-protection'}),
 					new Element('div', {'id':'cerabox-ajaxPreLoader','styles':{'float':'left','overflow':'hidden','display':'block'}})
 				])
 			]);
-        }
+		}
 	}
 
 	/**
@@ -1627,6 +1634,7 @@ Elements.implement({
 
 })(window);
 
+/*
 
 window.addEvent('statechange',function(){
 	if(document.location.href.match(/\?lb$/) == null && CeraBoxWindow.getWindowOpen() && !CeraBoxWindow.historyReplace)
@@ -1635,3 +1643,4 @@ window.addEvent('statechange',function(){
 		CeraBoxWindow.pushedHistory = false;
 	}
 });
+*/
