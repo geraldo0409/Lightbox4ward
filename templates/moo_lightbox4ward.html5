@@ -7,7 +7,7 @@ $GLOBALS['TL_CSS'][] = TL_SCRIPT_URL.'system/modules/lightbox4ward/html/mediaele
 
 <script src="<?php echo TL_SCRIPT_URL; ?>system/modules/lightbox4ward/html/cerabox.js"></script>
 <script src="<?php echo TL_SCRIPT_URL; ?>system/modules/lightbox4ward/html/mediaelement/js/mediaelement-and-player.min.js"></script>
-<script src="<?php echo TL_SCRIPT_URL; ?>plugins/history.js/mootools.history.js"></script>
+<script src="<?php echo TL_SCRIPT_URL; ?>plugins/history.js/scripts/bundled/html5/mootools.history.js"></script>
 <script>
 CeraBox.customOptions = {
 	displayOverlay: <?php echo $GLOBALS['TL_CONFIG']['lightbox4ward_displayOverlay'] ? 'true' : 'false'; ?>,
