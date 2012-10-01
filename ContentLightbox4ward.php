@@ -133,7 +133,7 @@ class ContentLightbox4ward extends ContentElement
 		$closeOnEndJS = '';
 		if($this->lightbox4ward_closeOnEnd)
 		{
-			$closeOnEndJS = "vid.addEventListener('ended', function(){CeraBoxWindow.close();},false);\n";
+			$closeOnEndJS = "mediaElement.addEventListener('ended', function(){CeraBoxWindow.close();}, false);";
 		}
 
 		// support multiple formats
@@ -161,30 +161,37 @@ function lightbox4ward{$this->id}()
 			title: '{$title}'
 		})
 	];
+
+	// dont use lightbox at mobile devices for video-playback
+	if(Browser.Platform.android || Browser.Platform.ios)
+	{
+		document.location.href = document.id('lb4wdHtml5{$this->id}').getElement('source[type=video/mp4]').get('src');
+		return;
+	}
+
 	var cb = new CeraBox(elems,
 	{
 		displayTitle: $displayTitle,
 		width: {$size[0]},
 		height: {$size[1]},
-		events: {
-			onAnimationEnd: function(currentItem){
-				// dont use mediaelement on mobile view
-				if(this.options.mobileView)
+		events:
+		{
+			onAnimationEnd: function(currentItem)
+			{
+				var vid = new MediaElementPlayer('lb4wdHtml5{$this->id}',
 				{
-					var vid = document.id('lb4wdHtml5{$this->id}').set('height','100%').set('width','100%');
-					$closeOnEndJS
-					vid.play();
-					return;
-				}
-
-				var me = new MediaElementPlayer('lb4wdHtml5{$this->id}',
-				{
-					pluginPath:'system/modules/lightbox4ward/html/mediaelement/',
-      				flashName:'legacy/flashmediaelement.swf',
-					silverlightName:'legacy/silverlightmediaelement.xap'
+					pluginPath:'system/modules/lightbox4ward/html/mediaelement/legacy/',
+      				flashName:'flashmediaelement.swf',
+					silverlightName:'silverlightmediaelement.xap',
+					success: function(mediaElement, domObject)
+					{
+						if (mediaElement.pluginType == 'native')
+						{
+							mediaElement.addEventListener('canplay', function(){mediaElement.play();}, false);
+							$closeOnEndJS
+						}
+					}
 				});
-				me.play();
-
 			}
 		}
 
