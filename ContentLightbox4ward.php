@@ -133,7 +133,7 @@ class ContentLightbox4ward extends ContentElement
 		$closeOnEndJS = '';
 		if($this->lightbox4ward_closeOnEnd)
 		{
-			$closeOnEndJS = "mediaElement.addEventListener('ended', function(){CeraBoxWindow.close();}, false);";
+			$closeOnEndJS = "this.addEvent('ended',function(){CeraBoxWindow.close();});";
 		}
 
 		// support multiple formats
@@ -147,7 +147,7 @@ class ContentLightbox4ward extends ContentElement
 			$strSources .= '<source type="'.$media.'/'.$type.'" src="'.$file.'">';
 		}
 
-		$strInlineVar = 'var lb4wdHtml5Var'.$this->id.' = \'<'.$media.' id="lb4wdHtml5'.$this->id.'" width="'.$size[0].'" height="'.$size[1].'" controls="controls" preload="auto">'.$strSources.'</'.$media.'>\';';
+		$strInlineVar = 'var lb4wdHtml5Var'.$this->id.' = \'<'.$media.' id="lb4wdHtml5'.$this->id.'" width="'.$size[0].'" height="'.$size[1].'" controls="controls" preload="auto" class="video-js vjs-default-skin">'.$strSources.'</'.$media.'>\';';
 
 return <<<JSSTR
 <script type="text/javascript">
@@ -178,20 +178,12 @@ function lightbox4ward{$this->id}()
 		{
 			onAnimationEnd: function(currentItem)
 			{
-				var vid = new MediaElementPlayer('lb4wdHtml5{$this->id}',
+				var myPlayer = _V_('lb4wdHtml5{$this->id}',{},function()
 				{
-					pluginPath:'system/modules/lightbox4ward/html/mediaelement/legacy/',
-      				flashName:'flashmediaelement.swf',
-					silverlightName:'silverlightmediaelement.xap',
-					success: function(mediaElement, domObject)
-					{
-						if (mediaElement.pluginType == 'native')
-						{
-							mediaElement.addEventListener('canplay', function(){mediaElement.play();}, false);
-							$closeOnEndJS
-						}
-					}
+					$closeOnEndJS
+					this.play();
 				});
+				// myPlayer.addEvent('error',function(e){console.log('VideoJS error', e);});
 			}
 		}
 
