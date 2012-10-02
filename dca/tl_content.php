@@ -98,7 +98,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_externURL'] = array
 	'exclude'                 => true,
 	'inputType'               => 'text',
 	'explanation'			  => 'lightbox4ward_externURL',
-	'eval'                    => array('mandatory'=>true,'helpwizard'=>true, 'tl_class'=>'long clr')
+	'eval'                    => array('mandatory'=>true,'helpwizard'=>true, 'decodeEntities'=>true, 'tl_class'=>'long clr')
 );
 $GLOBALS['TL_DCA']['tl_content']['fields']['lightbox4ward_flvSRC'] = array
 (

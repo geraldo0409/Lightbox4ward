@@ -83,6 +83,13 @@ class ContentLightbox4ward extends ContentElement
 			break;
 			
 			case 'Extern':
+				// rewrite youtube link
+				if(preg_match("~youtube\.com/watch\?v=([^&/]+)~i",html_entity_decode($this->lightbox4ward_externURL),$erg))
+				{
+					$this->lightbox4ward_externURL = 'http://youtube.com/embed/'.$erg[1];
+				}
+
+
 				$this->Template->js = $this->generateSingeSrcJS($this->lightbox4ward_externURL, $this->lightbox4ward_size, $title);
 				$this->Template->href = $this->lightbox4ward_externURL;
 			break;
