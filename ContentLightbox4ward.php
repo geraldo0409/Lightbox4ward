@@ -62,7 +62,7 @@ class ContentLightbox4ward extends ContentElement
 		$this->Template->embed_post = $embed[1];
 		$this->Template->link = $this->linkTitle;
 		$this->Template->title = specialchars($this->linkTitle);
-		$this->Template->target = (TL_MODE == 'BE') ? '' : ' onclick="lightbox4ward'.$this->id.'();return false;"';
+		$this->Template->target = (TL_MODE == 'BE') ? '' : ' onclick="lightbox4ward'.$this->id.'(this);return false;"';
 		$this->Template->lbType = $this->lightbox4ward_type;
 		$this->Template->lbSize = unserialize($this->lightbox4ward_size);
 
@@ -361,18 +361,17 @@ JSSTR;
 		$str = "\n";
 		foreach($images AS $meta)
 		{
-			$str .= "new Element('a',{href:'{$meta['src']}', title:'{$meta['alt']}', 'class': 'lb4wardgallery' }),\n";
+			$str .= "new Element('a',{href:'{$meta['src']}', title:'{$meta['alt']}', 'class': 'lb4wardgallery', styles: { 'overflow': 'hidden', 'height': '0px' } }),\n";
 		}
 		$str = substr($str,0,-2);
 		
 return <<<JSSTR
 <script type="text/javascript">
-function lightbox4ward{$this->id}()
+function lightbox4ward{$this->id}(link)
 {
-
 	var elems = [$str];
 
-	document.body.adopt(elems);
+	document.id(link).adopt(elems, 'after');
 
 	var cb = new CeraBox(elems, {
 	    events: {

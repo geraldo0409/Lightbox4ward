@@ -1328,27 +1328,10 @@ window.CeraBoxWindow = (function(window) {
 							'left':cerabox.getStyle('left')
 						});
 
-                        //console.log(currentItem.getPosition());
-
-
-
-
-
-						if(currentItem.getPosition() && currentItem.getPosition().x > 0)
-						{
-							var left = (currentItem.getPosition().x - (currentInstance.options.fixedPosition?document.id(document.body).getScroll().x:0)) + 'px';
-							var top = (currentItem.getPosition().x - (currentInstance.options.fixedPosition?document.id(document.body).getScroll().x:0)) + 'px';
-						}
-						else
-						{
-							var left = currentInstance.clickPosition.x;
-							var top = currentInstance.clickPosition.y;
-						}
-
 						return cerabox.setStyles({
 							'display':'block',
-							'left': left,
-							'top': 'top',
+                            'left':(currentItem.getPosition().x - (currentInstance.options.fixedPosition?document.id(document.body).getScroll().x:0)) + 'px',
+                            'top':(currentItem.getPosition().y - (currentInstance.options.fixedPosition?document.id(document.body).getScroll().y:0)) + 'px',
 							'width':currentItem.getSize().x + 'px',
 							'height':currentItem.getSize().y + 'px',
 							'margin':0,
