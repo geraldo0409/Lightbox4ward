@@ -192,10 +192,8 @@ function lightbox4ward{$this->id}()
 						}
 					}
 				});
-<<<<<<< HEAD
-=======
+
 				me.play();
->>>>>>> hm
 			}
 		}
 
