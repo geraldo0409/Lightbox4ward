@@ -158,7 +158,8 @@ function lightbox4ward{$this->id}()
 		new Element('a',
 		{
 			href: '#\$lb4wdHtml5Var{$this->id}',
-			title: '{$title}'
+			title: '{$title}',
+           'class': 'lb4ward'
 		})
 	];
 
@@ -353,7 +354,7 @@ JSSTR;
 		$str = "\n";
 		foreach($images AS $meta)
 		{
-			$str .= "new Element('a',{href:'{$meta['src']}', title:'{$meta['alt']}' }),\n";
+			$str .= "new Element('a',{href:'{$meta['src']}', title:'{$meta['alt']}', 'class': 'lb4wardgallery' }),\n";
 		}
 		$str = substr($str,0,-2);
 		
@@ -361,7 +362,11 @@ return <<<JSSTR
 <script type="text/javascript">
 function lightbox4ward{$this->id}()
 {
+
 	var elems = [$str];
+
+	document.body.adopt(elems);
+
 	var cb = new CeraBox(elems);
 	elems[0].fireEvent('click',window.event);
 }
