@@ -367,7 +367,13 @@ function lightbox4ward{$this->id}()
 
 	document.body.adopt(elems);
 
-	var cb = new CeraBox(elems);
+	var cb = new CeraBox(elems, {
+	    events: {
+	        onClose: function() {
+	            elems.destroy();
+	        }
+	    }
+	});
 	elems[0].fireEvent('click',window.event);
 }
 </script>
