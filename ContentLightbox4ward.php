@@ -376,7 +376,7 @@ function lightbox4ward{$this->id}(link)
 	var cb = new CeraBox(elems, {
 	    events: {
 	        onClose: function() {
-	            $$('.lb4wardgallery').destroy();
+	            $$(elems).destroy();
 	        }
 	    }
 	});
