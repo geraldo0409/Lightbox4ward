@@ -9,7 +9,7 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/lightbox4ward/html/cerabox.js';
 $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/lightbox4ward/html/video-js/video.js';
 ?>
 
-<script src="<?php echo TL_SCRIPT_URL; ?>plugins/history.js/scripts/bundled/html5/mootools.history.js"></script>
+<script src="<?php echo TL_SCRIPT_URL; ?>plugins/history.js/scripts/bundled/html4+html5/mootools.history.js"></script>
 <script>
 CeraBox.customOptions = {
 	displayOverlay: <?php echo $GLOBALS['TL_CONFIG']['lightbox4ward_displayOverlay'] ? 'true' : 'false'; ?>,
