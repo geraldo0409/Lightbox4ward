@@ -183,6 +183,10 @@
 	user-select: none;
 }
 
+.lightbox4wardContentInside {
+	padding: 10px;
+}
+
 /*IE6*/
 #cerabox-loading.ceraboxbox-ie6 {
 	position: absolute; margin-top: 0;

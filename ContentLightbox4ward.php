@@ -159,8 +159,15 @@ class ContentLightbox4ward extends ContentElement
 return <<<JSSTR
 <script type="text/javascript">
 $strInlineVar
-function lightbox4ward{$this->id}()
+function lightbox4ward{$this->id}(link)
 {
+	// dont use lightbox at mobile devices for video-playback
+	if(Browser.Platform.android || Browser.Platform.ios)
+	{
+		document.location.href = document.id('lb4wdHtml5{$this->id}').getElement('source[type=video/mp4]').get('src');
+		return;
+	}
+
 	var elems = [
 		new Element('a',
 		{
@@ -169,13 +176,7 @@ function lightbox4ward{$this->id}()
            'class': 'lb4ward'
 		})
 	];
-
-	// dont use lightbox at mobile devices for video-playback
-	if(Browser.Platform.android || Browser.Platform.ios)
-	{
-		document.location.href = document.id('lb4wdHtml5{$this->id}').getElement('source[type=video/mp4]').get('src');
-		return;
-	}
+	document.id(link).adopt(elems, 'after');
 
 	var cb = new CeraBox(elems,
 	{
@@ -192,7 +193,10 @@ function lightbox4ward{$this->id}()
 					this.play();
 				});
 				// myPlayer.addEvent('error',function(e){console.log('VideoJS error', e);});
-			}
+			},
+ 			onClose: function() {
+	            $$('.lightbox4wardDummyLink').destroy();
+	        }
 		}
 
 	});
@@ -222,7 +226,7 @@ JSSTR;
 
 return <<<JSSTR
 <script type="text/javascript">
-function lightbox4ward{$this->id}()
+function lightbox4ward{$this->id}(link)
 {
 	var elems = [
 		new Element('a',
@@ -231,10 +235,17 @@ function lightbox4ward{$this->id}()
 			title: '{$title}'
 		})
 	];
+	document.id(link).adopt(elems, 'after');
+
 	var cb = new CeraBox(elems,{
 		displayTitle: $displayTitle,
 		width:{$size[0]},
-		height:{$size[1]}
+		height:{$size[1]},
+		events: {
+	        onClose: function() {
+	            $$('.lightbox4wardDummyLink').destroy();
+	        }
+	    }
 	});
 	elems[0].fireEvent('click',window.event);
 }
@@ -361,7 +372,7 @@ JSSTR;
 		$str = "\n";
 		foreach($images AS $meta)
 		{
-			$str .= "new Element('a',{href:'{$meta['src']}', title:'{$meta['alt']}', 'class': 'lb4wardgallery', styles: { 'overflow': 'hidden', 'height': '0px' } }),\n";
+			$str .= "new Element('a',{href:'{$meta['src']}', title:'{$meta['alt']}', 'class': 'lightbox4wardDummyLink', styles: { 'overflow': 'hidden', 'height': '0px' } }),\n";
 		}
 		$str = substr($str,0,-2);
 		
@@ -376,7 +387,7 @@ function lightbox4ward{$this->id}(link)
 	var cb = new CeraBox(elems, {
 	    events: {
 	        onClose: function() {
-	            $$('.lb4wardgallery').destroy();
+	            $$('.lightbox4wardDummyLink').destroy();
 	        }
 	    }
 	});
