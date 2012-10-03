@@ -195,7 +195,7 @@ function lightbox4ward{$this->id}(link)
 				// myPlayer.addEvent('error',function(e){console.log('VideoJS error', e);});
 			},
  			onClose: function() {
-	            $$('.lightbox4wardDummyLink').destroy();
+	            $$(elems).destroy();
 	        }
 		}
 
@@ -243,7 +243,7 @@ function lightbox4ward{$this->id}(link)
 		height:{$size[1]},
 		events: {
 	        onClose: function() {
-	            $$('.lightbox4wardDummyLink').destroy();
+	            $$(elems).destroy();
 	        }
 	    }
 	});
@@ -387,7 +387,7 @@ function lightbox4ward{$this->id}(link)
 	var cb = new CeraBox(elems, {
 	    events: {
 	        onClose: function() {
-	            $$('.lightbox4wardDummyLink').destroy();
+	            $$(elems).destroy();
 	        }
 	    }
 	});
