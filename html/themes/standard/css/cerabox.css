@@ -183,6 +183,10 @@
 	user-select: none;
 }
 
+.lightbox4wardContent {
+	overflow: auto;
+	height: 100%;
+}
 .lightbox4wardContentInside {
 	padding: 10px;
 }

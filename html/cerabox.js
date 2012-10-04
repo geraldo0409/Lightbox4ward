@@ -5,6 +5,10 @@
  * @since 		13-01-2011
  * @version 	1.3.7
  *
+ * Imporved by 4ward.media and Joe Ray Gregory
+ * http://www.4wardmedia.de
+ *
+ *
  * This package requires
  * - MooTools 1.4 >
  * - MooTools More Assets
@@ -1593,7 +1597,9 @@ window.CeraBoxWindow = (function(window) {
 	}
 
 	function stopScrollingEvent(event) {
-		event.preventDefault();
+		var parent = document.id(event.target).getParent('.cerabox-content');
+		if(!parent)
+			event.preventDefault();
 	}
 
 	return _instance;

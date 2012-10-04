@@ -1,5 +1,20 @@
 <?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
+/**
+ * Lightbox4ward
+ * A Lightbox extension for the Contao WebCMS
+ *
+ * PHP version 5
+ * @copyright  4ward.media 2012 <http://www.4wardmedia.de>
+ * @author     Christoph Wiechert <wio@psitrax.de>
+ * @author     Joe Ray Gregory <http://www.may17.de>
+ * @package    lightbox.4ward
+ * @license    LGPL
+ * @filesource
+ */
+
+
+
 // Palette
 $GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] = str_ireplace('{backend_legend}','{lightbox4ward_legend},lightbox4ward_displayOverlay,lightbox4ward_fixedPosition,lightbox4ward_preventScrolling,'
 																						   .'lightbox4ward_addContentProtectionLayer,lightbox4ward_animation,lightbox4ward_theme,lightbox4ward_titleFormat;'

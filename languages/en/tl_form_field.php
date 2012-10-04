@@ -1,31 +1,18 @@
-<?php
-if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 /**
- * TYPOlight webCMS
- * Copyright (C) 2005 Leo Feyer
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation, either
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program. If not, please visit the Free
- * Software Foundation website at http://www.gnu.org/licenses/.
+ * Lightbox4ward
+ * A Lightbox extension for the Contao WebCMS
  *
  * PHP version 5
- * @copyright  4ward.media 2010
- * @author     Christoph Wiechert <christoph.wiechert@4wardmedia.de>
- * @package    lightbox4ward
- * @license    LGPL 
+ * @copyright  4ward.media 2012 <http://www.4wardmedia.de>
+ * @author     Christoph Wiechert <wio@psitrax.de>
+ * @author     Joe Ray Gregory <http://www.may17.de>
+ * @package    lightbox.4ward
+ * @license    LGPL
  * @filesource
  */
+
 
 $GLOBALS['TL_LANG']['FFL']['lightbox4ward'] = array('Lightbox4ward','Displays a link or an article in the lightbox.');
 $GLOBALS['TL_LANG']['FFL']['lightbox4ward_checkbox'] = array('Lightbox4ward checkbox','Displays an article in the lightbox aside a checkbox.');
@@ -61,6 +48,3 @@ $GLOBALS['TL_LANG']['XPL']['lightbox4ward_externURL'] = array
 	array('Image', 'The URL to an image gets displayed like a local one.'),
 	array('Soicial video', 'Lightbox4ward supports external video-content like Facebook,Google,Youtube and much more. <a href="http://iaian7.com/webcode/mediaboxAdvanced#examples" onclick="window.open(this.href); return false;">More information</a>.'),
 );
-
-
-?>

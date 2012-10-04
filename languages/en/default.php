@@ -1,5 +1,19 @@
-<?php
- 
+<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+
+/**
+ * Lightbox4ward
+ * A Lightbox extension for the Contao WebCMS
+ *
+ * PHP version 5
+ * @copyright  4ward.media 2012 <http://www.4wardmedia.de>
+ * @author     Christoph Wiechert <wio@psitrax.de>
+ * @author     Joe Ray Gregory <http://www.may17.de>
+ * @package    lightbox.4ward
+ * @license    LGPL
+ * @filesource
+ */
+
+
 $GLOBALS['TL_LANG']['CTE']['ce_lightbox4ward']['0'] = "Lightbox4ward";
 $GLOBALS['TL_LANG']['CTE']['ce_lightbox4ward']['1'] = "With the use of Lightbox4ward different elements, such als videos, galleries or articels can be presented in a lightbox.";
  
@@ -8,4 +22,3 @@ $GLOBALS['TL_LANG']['lightbox4ward']['noFlashMessage'] = '<div id="mbError"><b>E
 $GLOBALS['TL_LANG']['lightbox4ward']['closeLbl'] 		= 'close window';
 $GLOBALS['TL_LANG']['lightbox4ward']['nextLbl'] 		= 'next image';
 $GLOBALS['TL_LANG']['lightbox4ward']['prevLbl'] 		= 'previous image';
-?>

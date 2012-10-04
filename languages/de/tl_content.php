@@ -1,14 +1,18 @@
-<?php
+<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+
 /**
- * TL_ROOT/system/modules/lightbox4ward/languages/de/tl_content.php 
- * 
- * TYPOlight extension: lightbox4ward 1.0.0 
- * Deutsch translation file 
- * 
- * Copyright : by 4ward.media
- * License   : GNU Lesser Public License (LGPL) 
- * Author    : Christoph Wiechert (Psi), http://www.4wardmedia.de 
+ * Lightbox4ward
+ * A Lightbox extension for the Contao WebCMS
+ *
+ * PHP version 5
+ * @copyright  4ward.media 2012 <http://www.4wardmedia.de>
+ * @author     Christoph Wiechert <wio@psitrax.de>
+ * @author     Joe Ray Gregory <http://www.may17.de>
+ * @package    lightbox.4ward
+ * @license    LGPL
+ * @filesource
  */
+
  
 $GLOBALS['TL_LANG']['tl_content']['lightbox4ward_link_legend'] = 'Lightbox4ward - Link';
 
@@ -52,4 +56,3 @@ $GLOBALS['TL_LANG']['XPL']['lightbox4ward_externURL'] = array
 	array('Soicial Video', 'Lightbox4ward unterstüzt die Einbindung externer Videoquellen wie Facebook,Google,Youtube und viele andere. <a href="http://iaian7.com/webcode/mediaboxAdvanced#examples" onclick="window.open(this.href); return false;">Weitere Informationen</a>.'),
 );
 
-?>
